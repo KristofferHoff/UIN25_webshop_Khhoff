@@ -1,55 +1,28 @@
+import { useState } from "react";
 // Importerer produkter fra en ekstern fil
 import { products } from "./assets/legodudes";
 
-// Importerer komponenter som brukes i appen
-import Cart from "./components/Cart";
-import CategoryHeading from "./components/CategoryHeading";
-import Nav from "./components/Nav";
-import ProductCard from "./components/ProductCard";
-
 // Importerer stilfilen for appen
 import "./styles/style.css";
+import { Route, Routes } from "react-router";
+import Home from "./components/Home";
+import About from "./components/About";
+import Layout from "./components/Layout";
+import CategoryPage from "./components/Category";
 
 // Definerer hovedkomponenten App
 function App() {
+  const [cartCount, setCartCount] = useState(0);
+  const [toggle, setToggle] = useState(false);
+  const [cart, setCart] = useState([]);
   return (
-    <div id="content">
-      {/* Legger til handlevogn-komponenten */}
-      <Cart />
-
-      {/* Overskrift-seksjon med logo og handlekurvknapp */}
-      
-
-      {/* Hovedinnhold */}
-      <main>
-        {/* Viser overskrift for kategorien */}
-        <CategoryHeading title="Ninjago" />
-
-        {/* Produktliste-seksjon */}
-        <div id="productlist">
-          {/* Mapper gjennom produktlisten og genererer en ProductCard-komponent for hvert produkt */}
-          {products.map((product, index) => (
-            <ProductCard product={product} key={index} />
-          ))}
-        </div>
-
-        {/* Kommentarert ut HTML-kode som viser eksempler på produkter */}
-        {/* 
-            <article className="product-card">
-                <img src="website_images/PROD_dragon_zane.webp" alt="PRODUKTTITTEL" />
-                <a href="#KATEGORISIDE">Ninjago</a>
-                <h3>Dragon Zane</h3>
-                <p>Kr. 89,-</p>
-                <button>Legg i handlekurv</button>
-            </article>
-        */}
-      </main>
-
-      {/* Footer-seksjon */}
-      <footer>
-        <p>2025 &copy; Legodudes</p>
-      </footer>
-    </div>
+    <Layout toggle={toggle} cart={cart} cartCount={cartCount} setToggle={setToggle}>
+      <Routes>
+        <Route path="/" element={<Home cart={cart} setCart={setCart} setCartCount={setCartCount} products={products} />}></Route>
+        <Route path="/about" element={<About />}></Route>
+        <Route path="/category/:slug" element={<CategoryPage products={products} cart={cart} setCart={setCart} setCartCount={setCartCount} />}></Route>
+      </Routes>
+    </Layout>
   );
 }
 
